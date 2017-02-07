@@ -78,32 +78,29 @@ export default class Field {
     this.selectedCells.push(this.cells[y][x]);
   } 
 
-  drawPath(path, callback) {
+  drawPath(path, visualize, callback) {
     path.forEach((node) => {
       let cell = this.cells[node.y][node.x];
       cell.classList.add("cell-path");
       this.pathCells.push(cell);     
     });
 
-    this.isDrawing = true;
-    this.drawInterval = 200;
-    this.drawIndex = 0;
-    this.drawCallback = callback;
-    this.blockingOverlay.style.display = "";
-    this.drawPathArrows();
+    if (visualize) {
+      this.isDrawing = true;
+      this.drawInterval = 250;
+      this.drawIndex = 0;
+      this.drawCallback = callback;
+      this.blockingOverlay.style.display = "";
+      this.drawPathArrows();
+    }
+    else {
+      this.pathCells.forEach((cell, i) => this.drawArrow(i));
+      callback();
+    }
   }
 
   drawPathArrows() {
-    if (this.drawIndex === this.pathCells.length - 1) {
-      this.drawFinishArrow(this.drawIndex);
-    }
-    else if (this.drawIndex === 0) {
-      this.drawStartArrow();
-    }
-    else {
-      this.drawIntermediateArrow(this.drawIndex);
-    }
-
+    this.drawArrow(this.drawIndex);
     this.drawIndex++;
 
     if (this.drawIndex === this.pathCells.length) {
@@ -113,6 +110,18 @@ export default class Field {
     }
     else {
       setTimeout(this.drawPathArrows.bind(this), this.drawInterval);
+    }
+  }
+
+  drawArrow(index) {
+    if (index === this.pathCells.length - 1) {
+      this.drawFinishArrow(index);
+    }
+    else if (index === 0) {
+      this.drawStartArrow();
+    }
+    else {
+      this.drawIntermediateArrow(index);
     }
   }
 

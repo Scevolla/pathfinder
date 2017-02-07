@@ -5,7 +5,7 @@ import WavePathFinder from "./WavePathFinder";
 let field;
 let pathfinder;
 let startPoint, finishPoint;
-let prompt, status;
+let prompt, status, visualizeCB;
 
 const SELECT_START = 0;
 const SELECT_FINISH = 1;
@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   prompt = document.querySelector(".prompt");
   status = document.querySelector(".status");
+  visualizeCB = document.querySelector(".visualize-checkbox");
 });
 
 function cellClicked(x, y) {
@@ -57,8 +58,9 @@ function selectFinish(x, y) {
   let path = pathfinder.getPath(startPoint.x, startPoint.y, finishPoint.x, finishPoint.y);
   
   if (path.length > 0) {
-    field.drawPath(path, endPathDrawing);
-    prompt.textContent = "Построение пути. Кликните по полю, чтоб ускорить построение.";
+    field.drawPath(path, visualizeCB.checked, endPathDrawing);
+    if (visualizeCB.checked)
+      prompt.textContent = "Построение пути. Кликните по полю, чтоб ускорить построение.";
     status.textContent = `Старт: (${startPoint.x}, ${startPoint.y}). Финиш: (${x}, ${y}). Длина пути: ${path.length}.`;    
   }
   else {
